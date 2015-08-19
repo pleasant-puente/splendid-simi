@@ -6,6 +6,7 @@ map.directive('map', ['Map', '$rootScope', function(Map, $rootScope) {
     var $el = $(element);
     var mapCanvas = $el.find('#map-canvas')[0];
     var $changeDest = $el.find('.change-destination');
+    var $reserveSpot = $el.find('.reserve-spot');
     var $anotherSpot = $el.find('.another-spot');
     var $loading = $el.find('.loading');
     var $loadingText = $loading.find('.loading-text');
@@ -24,6 +25,11 @@ map.directive('map', ['Map', '$rootScope', function(Map, $rootScope) {
 
     $changeDest.on('click',function(e) {
       $rootScope.$broadcast('parkAssist:openModal');
+    });
+
+    $reserveSpot.on('click', function(e) {
+      console.log('Reserving from mapDirective.js');
+      Map.reserveSpot(); 
     });
 
     $anotherSpot.on('click',function(e) {

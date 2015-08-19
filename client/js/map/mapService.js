@@ -7,6 +7,7 @@ map.factory('Map', ['Traffic', 'DirectionsDisplay', 'Geocoder', 'MapOptions', 'L
   var firstSpotInitialized = false;
   var range = 0.2;
   var queue = [];
+  var currentMeterId;
 
   // If user leaves browser, remove user from db
   window.onbeforeunload = function(e) {
@@ -43,6 +44,7 @@ map.factory('Map', ['Traffic', 'DirectionsDisplay', 'Geocoder', 'MapOptions', 'L
       }
 
       setMeter(pSpot);
+      currentMeterId = pSpot.meter_id;
       User.setDestination(meterLoc);
       User.calcRoute()
       .then(function() {
@@ -78,6 +80,7 @@ map.factory('Map', ['Traffic', 'DirectionsDisplay', 'Geocoder', 'MapOptions', 'L
         firstSpotInitialized = true;
 
         setMeter(pSpot);
+        currentMeterId = pSpot.meter_id;
         User.setDestination(meterLoc);
 
         User.calcRoute()
@@ -87,6 +90,15 @@ map.factory('Map', ['Traffic', 'DirectionsDisplay', 'Geocoder', 'MapOptions', 'L
 
       });
 
+    });
+  };
+
+  var reserveSpot = function(){
+    // tell db to mark currentMeterId as reserved
+    console.log('reserveSpot from mapService.js with ', currentMeterId);
+    Locator.reserveSpace(currentMeterId)
+    .then(function(meter){
+      console.log('Marked meter: '+ meter);
     });
   };
 
@@ -144,6 +156,7 @@ map.factory('Map', ['Traffic', 'DirectionsDisplay', 'Geocoder', 'MapOptions', 'L
   return {
     init: init,
     findSpot: findSpot,
+    reserveSpot: reserveSpot,
     getMap: getMap
   };
 }]);

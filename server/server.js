@@ -76,7 +76,11 @@ usersRef.on('child_added', function(childSnapshot, prevChildKey) {
 
         pSpots[key].distance = displacement;
         if (pSpots[key].mostRecentEvent === 'SE') {
-          freeSpots[key] = pSpots[key];
+          if (pSpots[key].reserved){
+            if (pSpots[key].reserved < Date.now()){
+              freeSpots[key] = pSpots[key];
+            }
+          }
         }
       } // end if condition to check if the parking spot is within range
     } // end of for loop for pSpots
